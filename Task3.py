@@ -44,7 +44,10 @@ def main():
     taskE = spark.sql("SELECT n.id, n.name, p.page_rank FROM names n JOIN page_rank p ON n.id = p.id")
     print("Task e) Node names with their PageRank values:")
     taskE.show()
-
+    with open("task3_e.csv", "w") as f:
+        for row in taskE.collect():
+            f.write(f"{row['id']} {row['name']} {row['page_rank']}\n")
+    
     return
 
 main()
