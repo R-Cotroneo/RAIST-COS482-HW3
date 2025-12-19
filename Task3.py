@@ -33,7 +33,7 @@ def main():
 
     # d)
     print("\n")
-    namesRDD = names.map(lambda line: line.strip().split(",", 1)) \
+    namesRDD = names.map(lambda line: line.strip().split()) \
                     .map(lambda x: (x[0], x[1]))
     namesDF = spark.createDataFrame(namesRDD, ["id", "name"])
     namesDF.show()
