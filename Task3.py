@@ -1,3 +1,4 @@
+import csv
 from pyspark import SparkConf, SparkContext
 from pyspark.sql import SparkSession
 
@@ -45,9 +46,16 @@ def main():
     taskE = spark.sql("SELECT n.id, n.name, p.page_rank FROM names n JOIN page_rank p ON n.id = p.id")
     print("Task e) Node names with their PageRank values:")
     taskE.show()
-    with open("task3_e.csv", "w") as f:
+    with open("task3_e.csv", "w") as file:
+        fieldnames = ["id", "name", "page_rank"]
+        writer = csv.DictWriter(file, fieldnames=fieldnames, delimiter=",")
+        writer.writeheader()
         for row in taskE.collect():
-            f.write(f"{row['id']} {row['name']} {row['page_rank']}\n")
+            writer.writerow({
+                "id": row["id"],
+                "name": row["name"],
+                "page_rank": row["page_rank"]
+            })
     
     return
 
