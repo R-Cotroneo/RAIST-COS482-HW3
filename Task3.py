@@ -9,26 +9,26 @@ def main():
     spark = SparkSession.builder.getOrCreate()
 
     # Read the data
-    nodes = sc.textFile("./nodes.txt")
+    nodes = sc.textFile("./pagerank_output.txt")
     names = sc.textFile("./names.txt")
 
     # a) 
     nodesRDD = nodes.map(lambda line: line.strip().split()) \
                     .map(lambda x: (x[0], x[1]))
     nodesDF = spark.createDataFrame(nodesRDD, ["id", "page_rank"])
+    nodesDF.createOrReplaceTempView("page_ranks")
     print("Task a) DataFrame of node IDs and their PageRank values:")
     nodesDF.show()
-    nodesDF.createOrReplaceTempView("page_rank")
 
     # b)
     print("\n")
-    taskB = spark.sql("SELECT page_rank FROM page_rank WHERE id = 2")
+    taskB = spark.sql("SELECT page_rank FROM page_ranks WHERE id = 2")
     print("Task b) PageRank of node with ID 2:")
     taskB.show()
 
     # c)
     print("\n")
-    taskC = spark.sql("SELECT * FROM page_rank ORDER BY page_rank DESC LIMIT 1")
+    taskC = spark.sql("SELECT * FROM page_ranks ORDER BY page_rank DESC LIMIT 1")
     print("Task c) Node with the highest PageRank value:")
     taskC.show()
 
@@ -43,7 +43,7 @@ def main():
 
     # e)
     print("\n")
-    taskE = spark.sql("SELECT n.id, n.name, p.page_rank FROM names n JOIN page_rank p ON n.id = p.id")
+    taskE = spark.sql("SELECT n.id, n.name, p.page_rank FROM names n JOIN page_ranks p ON n.id = p.id")
     print("Task e) Node names with their PageRank values:")
     taskE.show()
     with open("task3_e.csv", "w") as file:
