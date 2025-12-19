@@ -36,8 +36,9 @@ def main():
     namesRDD = names.map(lambda line: line.strip().split()) \
                     .map(lambda x: (x[0], x[1]))
     namesDF = spark.createDataFrame(namesRDD, ["id", "name"])
-    namesDF.show()
     namesDF.createOrReplaceTempView("names")
+    print("Task d) Dataframe with node IDs and name associated with them:")
+    namesDF.show()
 
     # e)
     print("\n")
