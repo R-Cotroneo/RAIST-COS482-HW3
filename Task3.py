@@ -13,7 +13,7 @@ def main():
 
     # a) 
     nodesRDD = nodes.map(lambda line: line.strip().split()) \
-                        .map(lambda x: (int(x[0]), float(x[1])))
+                    .map(lambda x: (x[0], x[1]))
     nodesDF = spark.createDataFrame(nodesRDD, ["id", "page_rank"])
     print("Task a) DataFrame of node IDs and their PageRank values:")
     nodesDF.show()
@@ -27,15 +27,15 @@ def main():
 
     # c)
     print("\n")
-    taskC = spark.sql("SELECT * FROM page_rank ORDER BY page_rank DESC LIMIT 5")
+    taskC = spark.sql("SELECT * FROM page_rank ORDER BY page_rank DESC LIMIT 1")
     print("Task c) Node with the highest PageRank value:")
     taskC.show()
 
     # d)
     print("\n")
     namesRDD = names.map(lambda line: line.strip().split(",", 1)) \
-                    .map(lambda x: (int(x[0]), x[1]))
-    namesDF = spark.createDataFrame(namesRDD, ["id", "names"])
+                    .map(lambda x: (x[0], x[1]))
+    namesDF = spark.createDataFrame(namesRDD, ["id", "name"])
     namesDF.show()
     namesDF.createOrReplaceTempView("names")
 
